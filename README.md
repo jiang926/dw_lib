@@ -38,3 +38,84 @@
         
 
 ## 2. 数据库连接模块
+
+### 2.1 数据库表设计
+    factor_table.sql  # 数据库建表命令
+
+### 2.2 数据库连接实例
+    class DatabaseConnectionManager:
+        ...
+
+### 2.3 因子数据入库实例
+    class GetFactorDataAPI:
+        def create_factor_info(self, factor_info: dict):
+            """提交因子入库逻辑"""
+
+        def update_factor_status(self, factor_name: str, factor_version: str):
+            """审批，判断因子是否可以上线使用逻辑"""
+
+        def get_all_factor_version(self, factor_name: str):
+            """"查看库内当前因子的所有版本"""
+        
+        def get_all_factor_name(self):
+            """取所有因子名称"""
+
+        def get_new_factor_name(self, factor_name: str):
+            """获取因子的最新版本"""
+
+        def get_factor_pending_status(self, factor_name: str = None, factor_version: str = None):
+            """获取处于审核状态的因子"""
+
+
+## 3. 因子管理平台
+
+### 3.1 因子添加
+    #----------第一步----------#
+    # my_factor.cpp 自己构建的因子文件
+    ...实际代码，省略...
+
+    #----------第二步----------#
+    # CMakeLists.txt 文件，把你的新 .cpp 文件加入编译项中
+    set(FACTOR_SOURCES
+        factors/calc_RMI_zzh.cpp
+        factors/factor_template.cpp
+        factors/calc_RSI_example.cpp
+        factors/my_factor.cpp     # 👈 添加这里
+        ${COMMON_SOURCES}
+    )
+    
+    if(NOT DEFINED VERSION)   # 获取外部传入的 VERSION 参数
+        set(VERSION "default")
+    endif()
+    
+    message(STATUS "因子库版本: ${VERSION}")
+
+    set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib/${VERSION})  # 设置输出路径为 lib/${VERSION}
+
+    #----------第三步(可跳过)----------#
+    # 重新构建编译
+    cat build.sh
+
+    #!/bin/bash
+    VERSION=$1
+    if [ -z "$VERSION" ]; then
+      VERSION="default"
+    fi
+    
+    mkdir -p build
+    cd build
+    cmake .. -DVERSION=$VERSION
+    make -j
+    
+    #----------第四步----------#
+    import cli
+    # 编译因子，以及因子信息入库
+    add_cmake_factor(
+        factor_name: str,  # 因子名称
+        factor_version: str,  # 因子版本
+        factor_type: str,  # 因子类型
+        submitted_by: str,  # 因子提交人
+        factor_args: dict = None,  # 因子需要的参数
+        review_by: str = None  # 因子审批人
+    )
+    
