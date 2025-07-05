@@ -209,6 +209,17 @@ class GetFactorDataAPI:
             except Exception as e:
                 raise
 
+    def get_all_factor_name(self):
+        """获取所有因子名称"""
+        with self.transaction() as conn:
+            try:
+                sql = f"SELECT DISTINCT factor_name FROM {FACTOR_INFO_TABLE_NAME.get('factor_info')}"
+                cursor = conn.cursor()
+                cursor.execute(sql)
+                return cursor.fetchall()
+            except Exception as e:
+                raise
+
     def get_new_factor_name(self, factor_name: str):
         """获取因子的最新版本"""
         if not self._factor_exists(factor_name):
