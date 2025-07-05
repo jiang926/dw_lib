@@ -1,6 +1,8 @@
 import os.path
 
 import pandas as pd
+import sys
+sys.path.append('../')
 
 from database.mysql_database import GetFactorDataAPI
 
