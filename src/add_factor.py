@@ -18,7 +18,7 @@ def rmi_factor(code: str, date: str):
     except Exception as e:
         print(f"导入C++因子框架失败: {e}")
         sys.exit(1)
-    test_data = pd.read_parquet('../data/000001._ls.parquet')
+    test_data = pd.read_parquet('../data/000001_ls.parquet')
     factor = ff.create_factor("RMI")
     factor.set_data(test_data)
     factor.set_params(["RMI"])
