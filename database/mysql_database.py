@@ -330,7 +330,9 @@ class GetFactorDataAPI:
                 cursor.execute(sql, params)
                 results = cursor.fetchall()
 
-                return results is not None
+                if results:
+                    return True
+                return False
             except Exception as e:
                 self.logging.error(f"")
                 raise
