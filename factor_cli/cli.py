@@ -28,7 +28,7 @@ def add_cmake_factor(
         factor_info.update({'review_by': review_by})
 
     try:
-        subprocess.run(["./build.sh", factor_version], check=True)
+        # subprocess.run(["./build.sh", factor_version], check=True)
         print(f"✅ 编译版本 {factor_version} 成功！")
         try:
             gt_api.create_factor_info(factor_info)
