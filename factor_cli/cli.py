@@ -78,8 +78,9 @@ def node_factor(code: str, day: str, factor_name: str, factor_type: str, save_pa
         factor.set_params([factor_name])
         factor.run()
         result = factor.get_result()
+        df = pd.DataFrame(result)
         try:
-            result.to_parquet(save_path, index=False)
+            df.to_parquet(save_path, index=False)
             gt_api.write_node_factor_data(
                 factor_name,
                 version,
