@@ -323,11 +323,9 @@ class GetFactorDataAPI:
             try:
                 sql = f"""
                     SELECT * FROM {FACTOR_INFO_TABLE_NAME.get('factor_result')} WHERE `factor_name` = %s
-                    AND `version` = %s AND `code` = %s AND `day` = %s
+                    AND `version` = %s AND `code` = %s AND `calculated_date` = %s
                 """
-                params = (
-                    factor_name, factor_version, code, day
-                )
+                params = (factor_name, factor_version, code, day)
                 cursor = conn.cursor()
                 cursor.execute(sql, params)
                 results = cursor.fetchall()
