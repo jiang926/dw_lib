@@ -3,6 +3,8 @@ import os.path
 import pandas as pd
 
 from factor_cli.cli import add_cmake_factor, node_factor
+from database.mysql_database import GetFactorDataAPI
+
 # import sys
 # sys.path.append('../')
 #
@@ -56,9 +58,19 @@ from factor_cli.cli import add_cmake_factor, node_factor
 # res = rmi_factor('000001', '20250701')
 # print(res)
 
-
+db_api = GetFactorDataAPI()
 factor_name = "RMI"
 version = "v1.2.0"
 factor_type = "stock"
 submitted_by = "jiang'"
+
+# 添加因子
 add_cmake_factor(factor_name, version, factor_type, submitted_by)
+
+# 手动审批
+res = db_api.get_factor_pending_status("RMI")
+print(res)
+db_api.update_factor_status("RMI", "v1.2.0")
+
+# 计算因子
+node_factor('000001', '20250704', 'RMI')

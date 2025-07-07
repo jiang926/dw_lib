@@ -178,10 +178,10 @@ class GetFactorDataAPI:
     def update_factor_status(self, factor_name: str, factor_version: str):
         """审批因子"""
         if not self.factor_exists(factor_name, factor_version):
-            self.logging.warning(f"审批{factor_name}因子 {factor_version}版本 不存在，请先提交")
+            self.logging.warning(f"审批 {factor_name}因子 {factor_version}版本 不存在，请先提交")
             return
         if len(self.get_factor_pending_status(factor_name, factor_version)) == 0:
-            self.logging.warning(f"审批{factor_name}因子 {factor_version}版本 已经通过审批")
+            self.logging.warning(f"审批 {factor_name}因子 {factor_version}版本 已经通过审批")
             return
         """TODO: 需要插入一个函数，审核这个因子是否通过，返回 字符串1，通过。字符串2，不通过"""
         with self.transaction() as conn:
@@ -193,6 +193,7 @@ class GetFactorDataAPI:
                 params = ('1', factor_name, factor_version)
                 cursor = conn.cursor()
                 cursor.execute(sql, params)
+                self.logging.info(f"因子 {factor_name} 版本 {factor_version} 通过审批")
             except Exception as e:
                 self.logging.error(f"函数 {self.update_factor_status.__name__} 审批因子失败, {e}")
                 raise
