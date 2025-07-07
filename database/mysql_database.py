@@ -287,31 +287,56 @@ class GetFactorDataAPI:
                 self.logging.error(f"函数{self.factor_exists.__name__} 内 获取指定因子失败， {e}")
                 raise
 
+    def write_node_factor_data(self, factor_name: str, factor_version: str,
+                               code: str, day: str, data_type: str, save_path: str = './save_path',
+                               data_status: str = 1, extra_info: dict = None
+                               ):
+        """将计算因子结果信息保存到数据库中"""
+        with self.transaction() as conn:
+            try:
+                sql = f"""
+                    INSERT INTO {FACTOR_INFO_TABLE_NAME.get('factor_result')} (
+                        factor_name, version, code, factor_type, factor_path,
+                        calculated_date, data_status, extra_info
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                """
+                params = (
+                    factor_name,
+                    factor_version,
+                    code,
+                    data_type,
+                    save_path,
+                    day,
+                    data_status,
+                    json.dumps(extra_info)
+                )
+                conn.cursor().execute(sql, params)
+                self.logging.info(f"{factor_name}因子 {factor_version} 版本计算{code} {day}结果入库成功")
+            except Exception as e:
+                self.logging.error(f"{factor_name}因子 {factor_version} 版本计算{code} {day}结果入库失败: {e}")
+                raise
+
+    def exists_source_code_data(self, factor_name: str, factor_version: str,
+                                code: str, day: str):
+        """判定因子结果存在"""
+        with self.transaction() as conn:
+            try:
+                sql = f"""
+                    SELECT * FROM {FACTOR_INFO_TABLE_NAME.get('factor_result')} WHERE `factor_name` = %s
+                    AND `version` = %s AND `code` = %s AND `day` = %s
+                """
+                params = (
+                    factor_name, factor_version, code, day
+                )
+                cursor = conn.cursor()
+                cursor.execute(sql, params)
+                results = cursor.fetchall()
+                if results:
+                    return False
+                return True
+            except Exception as e:
+                self.logging.error(f"")
+                raise
+
     def close(self):
         self.db_manager.close_connection()
-
-    def test(self, number):
-        with self.transaction() as conn:
-            conn.ping(reconnect=True)
-            time.sleep(1.5)
-            self.logging.info(f'{number} threading ....')
-
-
-if __name__ == '__main__':
-    import threading
-
-    db_api = GetFactorDataAPI()
-
-
-    def threading_function(thread_id):
-        db_api.test(thread_id)
-
-
-    threads = []
-    for i in range(8):
-        t = threading.Thread(target=threading_function, args=(i,))
-        threads.append(t)
-        t.start()
-
-    for i in threads:
-        i.join()

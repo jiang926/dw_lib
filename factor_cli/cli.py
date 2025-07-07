@@ -38,14 +38,29 @@ def add_cmake_factor(
         print(f"❌ 编译失败，错误码: {e}")
 
 
-def node_factor(code: str, datetime: str, factor_name: str, factor_version: str = None):
-    if factor_version is None:
+def node_factor(code: str, day: str, factor_name: str, factor_type: str, save_path: str):
+    # if factor_version is None:
+    #     result = gt_api.get_new_factor_name(factor_name)
+    #     print(result)
+    #     print(f"采用 {factor_name} 因子的 {result.get('version')} 版本计算因子")
+    #
+    # if not gt_api.factor_exists(factor_name, factor_version):
+    #     print(f" 因子不存在")
+    try:
         result = gt_api.get_new_factor_name(factor_name)
-        print(result)
-        print(f"采用 {factor_name} 因子的 {result.get('version')} 版本计算因子")
-
-    if not gt_api.factor_exists(factor_name, factor_version):
-        print(f" 因子不存在")
+        version = result.get('version')
+        print(f"采用 {factor_name} 因子的 {version} 版本计算因子")
+    except Exception as e:
+        print(f"因子获取失败，{e}")
+        raise
+    if gt_api.exists_source_code_data(
+            factor_name,
+            version,
+            code,
+            day
+    ):
+        print(f"因子结果已经存在库中")
+        return
 
     df = pd.read_parquet('../data/000001_ls.parquet')  # 获取数据
     try:
@@ -61,9 +76,21 @@ def node_factor(code: str, datetime: str, factor_name: str, factor_version: str 
         factor.set_params([factor_name])
         factor.run()
         result = factor.get_result()
-        return result
+        try:
+            result.to_parquet(save_path, index=False)
+            gt_api.write_node_factor_data(
+                factor_name,
+                version,
+                code,
+                day,
+                factor_type
+            )
+        except Exception as e:
+            print(f"因子结果保存到{save_path}失败，{e}")
+            raise
     except Exception as e:
         print(f"{factor_name} 计算失败， {e}")
+        raise
 
 
 # class FactorCalculationRunner:
