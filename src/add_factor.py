@@ -72,4 +72,4 @@ print(res)
 db_api.update_factor_status("RMI", "v1.2.0")
 
 # 计算因子
-node_factor('000001', '20250704', 'RMI')
+results = node_factor('000001', '20250704', 'RMI')

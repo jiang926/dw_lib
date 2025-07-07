@@ -61,6 +61,7 @@ def node_factor(code: str, datetime: str, factor_name: str, factor_version: str 
         factor.set_params([factor_name])
         factor.run()
         result = factor.get_result()
+        return result
     except Exception as e:
         print(f"{factor_name} 计算失败， {e}")
 
