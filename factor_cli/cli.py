@@ -1,7 +1,10 @@
 import subprocess
+
+import pandas as pd
+
 from database.mysql_database import GetFactorDataAPI
 
-gt_api = GetFactorDataAPI
+gt_api = GetFactorDataAPI()
 
 
 def add_cmake_factor(
@@ -35,8 +38,33 @@ def add_cmake_factor(
         print(f"❌ 编译失败，错误码: {e}")
 
 
+def node_factor(code: str, datetime: str, factor_name: str, factor_version: str = None):
+    if factor_version is None:
+        result = gt_api.get_new_factor_name(factor_name)
+        print(f"采用 {factor_name} 因子的 {result[0]} 版本计算因子")
+
+    if not gt_api.factor_exists(factor_name, factor_version):
+        print(f" 因子不存在")
+
+    df = pd.read_parquet()  # 获取数据
+    try:
+        import factor_framework as ff
+    except Exception as e:
+        print("因子导入失败....")
+        raise
+    try:
+        factor = ff.create_factor(factor_name)
+        factor.set_data(df)
+        factor.set_params([factor_name])
+        factor.run()
+        result = factor.get_result()
+    except Exception as e:
+        print(f"{factor_name} 计算失败， {e}")
+
+
 # class FactorCalculationRunner:
 #     pass
+
 
 if __name__ == '__main__':
     add_cmake_factor('name', '1.1', '0', 'jiang', {'a': 1, 'b': 2})

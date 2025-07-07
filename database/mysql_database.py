@@ -177,7 +177,7 @@ class GetFactorDataAPI:
 
     def update_factor_status(self, factor_name: str, factor_version: str):
         """审批因子"""
-        if not self._factor_exists(factor_name, factor_version):
+        if not self.factor_exists(factor_name, factor_version):
             self.logging.warning(f"审批{factor_name}因子 {factor_version}版本 不存在，请先提交")
             return
         if len(self.get_factor_pending_status(factor_name, factor_version)) == 0:
@@ -222,7 +222,7 @@ class GetFactorDataAPI:
 
     def get_new_factor_name(self, factor_name: str):
         """获取因子的最新版本"""
-        if not self._factor_exists(factor_name):
+        if not self.factor_exists(factor_name):
             self.logging.warning(f"{factor_name} 因子不存在")
             return
         with self.transaction() as conn:
@@ -267,7 +267,7 @@ class GetFactorDataAPI:
                 self.logging.error(f"函数 {self.get_factor_pending_status.__name__}内 获取审核因子失败，{e}")
                 raise
 
-    def _factor_exists(self, factor_name: str, factor_version: str = None):
+    def factor_exists(self, factor_name: str, factor_version: str = None):
         """判断因子，以及对应的版本是否存在"""
         with self.transaction() as conn:
             try:
@@ -283,7 +283,7 @@ class GetFactorDataAPI:
                     return True
                 return False
             except Exception as e:
-                self.logging.error(f"函数{self._factor_exists.__name__} 内 获取指定因子失败， {e}")
+                self.logging.error(f"函数{self.factor_exists.__name__} 内 获取指定因子失败， {e}")
                 raise
 
     def close(self):

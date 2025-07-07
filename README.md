@@ -69,7 +69,29 @@
 
 ## 3. 因子管理平台
 
-### 3.1 因子添加
+### 3.1 cli管理
+    def add_cmake_factor(
+        factor_name: str,
+        factor_version: str,
+        factor_type: str,
+        submitted_by: str,
+        factor_args: dict = None,
+        review_by: str = None
+    ):
+        """构建因子"""
+
+    def node_factor(
+        code: str, datetime: str, factor_name: str,
+        factor_version: str = None
+    ):
+        """计算因子"""
+        # 判断因子是否存在
+        # 判断因子是否通过审核
+        # 获取数据
+        # 计算
+        # 保存结果
+
+### 3.2 构建步骤
     #----------第一步----------#
     # my_factor.cpp 自己构建的因子文件
     ...实际代码，省略...
