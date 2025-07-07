@@ -2,13 +2,12 @@ import os.path
 
 import pandas as pd
 
+import sys
+
+sys.path.append('../')
 from factor_cli.cli import add_cmake_factor, node_factor
 from database.mysql_database import GetFactorDataAPI
 
-# import sys
-# sys.path.append('../')
-#
-# from database.mysql_database import GetFactorDataAPI
 #
 #
 # db_api = GetFactorDataAPI()
