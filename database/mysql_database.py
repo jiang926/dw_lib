@@ -296,7 +296,7 @@ class GetFactorDataAPI:
             try:
                 sql = f"""
                     INSERT INTO {FACTOR_INFO_TABLE_NAME.get('factor_result')} (
-                        factor_name, version, code, factor_type, factor_path,
+                        factor_name, version, code, data_type, factor_path,
                         calculated_date, data_status, extra_info
                     ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """
@@ -334,7 +334,7 @@ class GetFactorDataAPI:
                     return True
                 return False
             except Exception as e:
-                self.logging.error(f"")
+                self.logging.error(f"{e}")
                 raise
 
     def close(self):
