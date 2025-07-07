@@ -300,12 +300,13 @@ class GetFactorDataAPI:
                         calculated_date, data_status, extra_info
                     ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """
+                path = os.path.join(save_path, day, code)
                 params = (
                     factor_name,
                     factor_version,
                     code,
                     data_type,
-                    save_path,
+                    path,
                     day,
                     data_status,
                     json.dumps(extra_info)
