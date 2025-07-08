@@ -66,6 +66,15 @@
         def get_factor_pending_status(self, factor_name: str = None, factor_version: str = None):
             """获取处于审核状态的因子"""
 
+        def write_node_factor_data(self, factor_name: str, factor_version: str,
+                               code: str, day: str, data_type: str, save_path: str = './save_path',
+                               data_status: str = 1, extra_info: dict = None
+                               ):
+        """将计算因子结果信息保存到数据库中"""
+
+        def exists_source_code_data(self, factor_name: str, factor_version: str,
+                                code: str, day: str):
+        """判定因子计算结果存在"""
 
 ## 3. 因子管理平台
 
@@ -81,15 +90,20 @@
         """构建因子"""
 
     def node_factor(
-        code: str, datetime: str, factor_name: str,
-        factor_version: str = None
+        code: str,  # 股票代码
+        day: str,  # 日期
+        factor_name: str,  # 因子名称 
+        factor_type: str,   # 类型
+        save_path: str = None  # 保存路径
     ):
-        """计算因子"""
-        # 判断因子是否存在
-        # 判断因子是否通过审核
-        # 获取数据
-        # 计算
-        # 保存结果
+        """计算因子结果"""
+        # 1. 获取因子最新版本, GetFactorDataAPI.get_new_factor_name()
+        # 2. 从数据库中获取数据，判断因子计算的结果是否存在，存在则告知，然后结束。 
+                GetFactorDataAPI.exists_source_code_data()
+        # 3. 获取原始数据
+        # 4. 计算
+        # 5. 保存计算结果
+        # 6. 将计算结果相关信息保存到数据库中。 GetFactorDataAPI.write_node_factor_data()
 
 ### 3.2 构建步骤
     #----------第一步----------#
@@ -140,4 +154,3 @@
         factor_args: dict = None,  # 因子需要的参数
         review_by: str = None  # 因子审批人
     )
-    
