@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 import pandas as pd
@@ -78,8 +79,9 @@ def node_factor(code: str, day: str, factor_name: str, factor_type: str, save_pa
         factor.run()
         result = factor.get_result()
         df = pd.DataFrame(result)
+        os.makedirs(f"{save_path}/{day}/", exist_ok=True)
         try:
-            df.to_parquet(save_path, index=False)
+            df.to_parquet(f"{save_path}/{day}/{code}.parquet", index=False)
             gt_api.write_node_factor_data(
                 factor_name,
                 version,
