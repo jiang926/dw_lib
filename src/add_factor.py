@@ -5,7 +5,7 @@ import pandas as pd
 # import sys
 #
 # sys.path.append('../')
-from factor_cli.cli import add_cmake_factor, node_factor
+from factor_cli import add_cmake_factor, node_factor
 from database.mysql_database import GetFactorDataAPI
 
 #
