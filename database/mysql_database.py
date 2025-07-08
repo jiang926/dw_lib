@@ -288,7 +288,7 @@ class GetFactorDataAPI:
                 raise
 
     def write_node_factor_data(self, factor_name: str, factor_version: str,
-                               code: str, day: str, data_type: str, save_path: str = './save_path',
+                               code: str, day: str, data_type: str, save_path: str,
                                data_status: str = 1, extra_info: dict = None
                                ):
         """将计算因子结果信息保存到数据库中"""
