@@ -68,7 +68,6 @@ add_cmake_factor(factor_name, version, factor_type, submitted_by)
 
 # 手动审批
 res = db_api.get_factor_pending_status("RMI")
-print(res)
 db_api.update_factor_status("RMI", "v1.2.0")
 
 # 计算因子

@@ -53,21 +53,20 @@ def node_factor(code: str, day: str, factor_name: str, factor_type: str, save_pa
     except Exception as e:
         print(f"因子获取失败，{e}")
         raise
-    a = gt_api.exists_source_code_data(
+    msg = gt_api.exists_source_code_data(
             factor_name,
             version,
             code,
             day
     )
-    print(a)
-    if a:
+    if msg:
         print(f"因子结果已经存在库中")
         return
 
     df = pd.read_parquet('../data/000001_ls.parquet')  # 获取数据
     try:
-        import sys
-        sys.path.append('../lib')
+        # import sys
+        # sys.path.append('../lib')
         import factor_framework as ff
     except Exception as e:
         print("因子导入失败....")
