@@ -87,7 +87,8 @@ def node_factor(code: str, day: str, factor_name: str, factor_type: str, save_pa
                 version,
                 code,
                 day,
-                factor_type
+                factor_type,
+                save_path
             )
         except Exception as e:
             print(f"因子结果保存到{save_path}失败，{e}")
