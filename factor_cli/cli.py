@@ -39,7 +39,7 @@ def add_cmake_factor(
         print(f"❌ 编译失败，错误码: {e}")
 
 
-def node_factor(code: str, day: str, factor_name: str, factor_type: str, save_path: str = None):
+def node_factor(code: str, day: str, factor_name: str, factor_type: str, save_path: str = '.'):
     # if factor_version is None:
     #     result = gt_api.get_new_factor_name(factor_name)
     #     print(result)
