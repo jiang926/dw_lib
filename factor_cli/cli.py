@@ -39,14 +39,13 @@ def add_cmake_factor(
         print(f"❌ 编译失败，错误码: {e}")
 
 
-def node_factor(code: str, day: str, factor_name: str, factor_type: str, save_path: str = '.'):
-    # if factor_version is None:
-    #     result = gt_api.get_new_factor_name(factor_name)
-    #     print(result)
-    #     print(f"采用 {factor_name} 因子的 {result.get('version')} 版本计算因子")
-    #
-    # if not gt_api.factor_exists(factor_name, factor_version):
-    #     print(f" 因子不存在")
+def node_factor(code: str, day: str, factor_name: str, factor_type: str):
+    try:
+        from dw_data.fastpai import getAPI, getLS, getOrig, gkts, putAPI
+    except Exception as e:
+        print(f"❌ 引用获取数据包失败，检查环境是否安装： {e}")
+        raise
+
     try:
         result = gt_api.get_new_factor_name(factor_name)
         version = result.get('version')
