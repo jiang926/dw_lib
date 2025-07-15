@@ -41,7 +41,7 @@ def add_cmake_factor(
 
 def node_factor(code: str, day: str, factor_name: str, factor_type: str):
     try:
-        from dw_data.fastpai import getAPI, getLS, getOrig, gkts, putAPI
+        from dw_data.fastpai import getAPI, getLS, getOrig, putAPI
     except Exception as e:
         print(f"❌ 引用获取数据包失败，检查环境是否安装： {e}")
         raise
