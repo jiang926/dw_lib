@@ -40,6 +40,7 @@ def add_cmake_factor(
 
 
 def node_factor(code: str, day: str, factor_name: str, factor_type: str):
+    day = str(day).replace('-', '')
     try:
         from dw_data.fastpai import getAPI, getLS, getOrig, putAPI
     except Exception as e:
@@ -59,11 +60,22 @@ def node_factor(code: str, day: str, factor_name: str, factor_type: str):
             code,
             day
     )
+
+    save_path = f"{factor_type}/{factor_name}/{day}/{code}.parquet"
     if msg:
         print(f"因子结果已经存在库中")
-        return
+        try:
+            return getAPI.get_df(f"122/data2/{save_path}")
+        except Exception as e:
+            print(f"读取错误，{e}")
+            return None
 
-    df = pd.read_parquet('../data/000001_ls.parquet')  # 获取数据
+    try:
+        df = getLS.read_ls(code, day)
+    except Exception as e:
+        print(f"❌ 原始数据获取失败， {e}")
+        raise
+
     try:
         import sys
         sys.path.append('../lib')
@@ -78,17 +90,22 @@ def node_factor(code: str, day: str, factor_name: str, factor_type: str):
         factor.run()
         result = factor.get_result()
         df = pd.DataFrame(result)
-        os.makedirs(f"{save_path}/{day}/", exist_ok=True)
+
         try:
-            df.to_parquet(f"{save_path}/{day}/{code}.parquet", index=False)
-            gt_api.write_node_factor_data(
-                factor_name,
-                version,
-                code,
-                day,
-                factor_type,
-                save_path
-            )
+            result_status = putAPI.put_parquet(df, f"122/{save_path}", verbose=1)
+            if result_status.get('success', False):
+                gt_api.write_node_factor_data(
+                    factor_name,
+                    version,
+                    code,
+                    day,
+                    factor_type,
+                    save_path
+                )
+                return df
+            else:
+                print(f"数据保存失败")
+                return None
         except Exception as e:
             print(f"因子结果保存到{save_path}失败，{e}")
             raise

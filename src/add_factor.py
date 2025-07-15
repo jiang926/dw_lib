@@ -59,8 +59,8 @@ from database.mysql_database import GetFactorDataAPI
 
 db_api = GetFactorDataAPI()
 factor_name = "RMI"
-version = "v1.2.0"
-factor_type = "stock"
+version = "v1.1"
+factor_type = "100"
 submitted_by = "jiang'"
 
 # 添加因子
@@ -68,8 +68,8 @@ add_cmake_factor(factor_name, version, factor_type, submitted_by)
 
 # 手动审批
 res = db_api.get_factor_pending_status("RMI")
-db_api.update_factor_status("RMI", "v1.2.0")
+db_api.update_factor_status("RMI", "v1.1")
 
 # 计算因子
-results = node_factor('000001', '20250704', 'RMI', 'stock')
+results = node_factor('000002', '20250704', 'RMI', '100')
 print(results)
